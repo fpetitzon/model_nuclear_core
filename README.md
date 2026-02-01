@@ -79,24 +79,69 @@ Where J_0 is the Bessel function of the first kind and R_ex, H_ex include extrap
 - NumPy >= 1.20.0
 - SciPy >= 1.7.0
 
-### Install from Source
+### Using uv (Recommended)
+
+[uv](https://docs.astral.sh/uv/) is an extremely fast Python package and project manager. It's the recommended way to manage this project.
+
+#### Install uv
+
+```bash
+# On macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or via pip
+pip install uv
+```
+
+#### Set Up the Project
 
 ```bash
 # Clone the repository
 git clone https://github.com/your-repo/nuclear_core.git
 cd nuclear_core
 
+# Create virtual environment and install dependencies
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+uv pip install -r requirements.txt
+
+# Install the package in development mode
+uv pip install -e .
+```
+
+#### Quick Start with uv
+
+```bash
+# Run the simulation directly (uv handles dependencies automatically)
+uv run python examples/run_simulation.py
+
+# Run tests
+uv run pytest tests/ -v
+```
+
+### Using pip (Alternative)
+
+If you prefer traditional pip:
+
+```bash
+# Clone the repository
+git clone https://github.com/your-repo/nuclear_core.git
+cd nuclear_core
+
+# Create and activate virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
 # Install dependencies
 pip install -r requirements.txt
 
 # Install the package
 pip install -e .
-```
-
-### Quick Install
-
-```bash
-pip install numpy scipy
 ```
 
 ## Usage
@@ -204,7 +249,12 @@ json_str = reactor.to_json()
 ## Running the Example Script
 
 ```bash
-# Run basic simulation
+# Using uv (recommended)
+uv run python examples/run_simulation.py
+uv run python examples/run_simulation.py --power 2800 --enrichment 4.5
+uv run python examples/run_simulation.py --study all
+
+# Or with activated virtual environment
 python examples/run_simulation.py
 
 # Run with custom parameters
@@ -225,8 +275,9 @@ python examples/run_simulation.py --output results.json
 ```
 nuclear_core/
 ├── README.md                 # This file
+├── pyproject.toml            # Project configuration (uv/pip)
 ├── requirements.txt          # Python dependencies
-├── setup.py                  # Package setup
+├── setup.py                  # Legacy package setup
 ├── nuclear_core/             # Main package
 │   ├── __init__.py          # Package exports
 │   ├── constants.py         # Physical constants and nuclear data
@@ -285,14 +336,19 @@ Main integration:
 ## Running Tests
 
 ```bash
-# Run all tests
-python -m pytest tests/ -v
+# Using uv (recommended)
+uv run pytest tests/ -v
+uv run pytest tests/test_neutronics.py -v
+uv run pytest tests/ --cov=nuclear_core
+
+# Or with activated virtual environment
+pytest tests/ -v
 
 # Run specific test module
-python -m pytest tests/test_neutronics.py -v
+pytest tests/test_neutronics.py -v
 
 # Run with coverage
-python -m pytest tests/ --cov=nuclear_core
+pytest tests/ --cov=nuclear_core
 ```
 
 ## Physical Assumptions and Limitations
